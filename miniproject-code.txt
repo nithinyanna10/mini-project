@@ -1,0 +1,75 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import sys
+df=pd.read_csv('../input/voicegender/voice.csv')
+df.head
+df.shape
+df.dtypes
+d1=df['label'].value_counts()
+d1
+plt.bar(d1.index,d1)
+plt.xlabel('gender')
+plt.ylabel('no.of people')
+plt.show()
+
+y = np.array([1584,1584])
+mylabels = ["male","female"]
+
+plt.pie(y, labels = mylabels)
+plt.legend()
+plt.show() 
+x=df.iloc[:,:-1]
+y=df.iloc[:,-1]
+print(x.shape,y.shape)
+print(type(x),type(y))
+x.head()
+y.head()
+from sklearn.model_selection import train_test_split
+x_tr,x_te,y_tr,y_te=train_test_split(x,y,test_size=0.20)
+print(x_tr.shape)
+print(x_te.shape)
+print(y_tr.shape)
+print(y_te .shape)
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix,classification_report
+def apply_model(model):
+    model.fit(x_tr,y_tr)
+    print('Accuracy',model.score(x_te,y_te))
+    ypred = model.predict(x_te)
+    print('Predicted values\n',ypred)
+    cm = confusion_matrix(y_te,ypred)
+    print('Confusion Matrix\n',cm)
+    
+    print('Classification report\n',classification_report(y_te,ypred))
+    sns.heatmap(cm,annot=True)
+    plt.show()
+
+m1 = LogisticRegression()
+apply_model(m1)
+m2= DecisionTreeClassifier(criterion='gini',max_depth=5,min_samples_split=20)
+apply_model(m2)
+m3=RandomForestClassifier(n_estimators=70,criterion='gini',max_depth=5,min_samples_split=10)
+apply_model(m3)
+m4=SVC(kernel='linear',C=1)
+apply_model(m4)
+m5=KNeighborsClassifier(n_neighbors=27)
+apply_model(m5)
+
+
+    
+
+
+
+
+
+
+
+
+
+
